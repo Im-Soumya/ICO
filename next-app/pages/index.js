@@ -201,6 +201,9 @@ export default function Home() {
     try {
       await getProviderOrSigner();
       setWalletConnected(true);
+
+      await getTotalSupply();
+      await getBalanceOfTokens();
     } catch (e) {
       console.log(e);
     }
@@ -229,47 +232,60 @@ export default function Home() {
       getTotalSupply();
       getBalanceOfTokens();
       getTokensToBeClaimed();
-      // withdrawCoins();
+      withdrawCoins();
     }
   }, [walletConnected]);
 
   const renderButton = () => {
     if (loading) {
       return (
-        <div>
-          <button>Loading</button>
+        <div className="flex justify-center py-3">
+          <button className="py-2 pl-4 pr-5 text-white font-semibold rounded-3xl bg-cyan-600">
+            Please wait...
+          </button>
         </div>
       );
     }
 
     if (walletConnected && isOwner) {
       return (
-        <div>
-          <button onClick={withdrawCoins}>Withdraw coins</button>
+        <div className="flex justify-center py-3">
+          <button
+            className="py-2 pl-4 pr-5 text-white font-semibold rounded-3xl bg-cyan-600"
+            onClick={withdrawCoins}
+          >
+            Withdraw coins
+          </button>
         </div>
       );
     }
 
     if (tokensToBeClaimed > 0) {
       return (
-        <div>
-          <button onClick={claimTokens}>Claim tokens</button>
+        <div className="flex justify-center py-3">
+          <button
+            className="py-2 pl-4 pr-5 text-white font-semibold rounded-3xl bg-cyan-600"
+            onClick={claimTokens}
+          >
+            Claim tokens
+          </button>
         </div>
       );
     }
 
     return (
-      <div>
-        <div>
+      <div className="flex justify-center py-3">
+        <div className="w-96">
           <input
             type="text"
             placeholder="Enter amount of tokens you want to mint..."
+            className="p-2 text-black w-full rounded-l-3xl"
             onChange={(e) => setAmount(e.currentTarget.value)}
           />
         </div>
 
         <button
-          className="py-2 px-7 text-white font-semibold bg-indigo-700 rounded-3xl"
+          className="py-2 pl-4 pr-5 text-white font-semibold rounded-r-3xl bg-gradient-to-r bg-cyan-600"
           onClick={() => mintTokens(amount)}
         >
           Mint
@@ -279,40 +295,48 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center">
+    <div className="flex h-screen justify-center items-center bg-slate-800">
       <Head>
         <title>Crypto Devs</title>
         <meta name="description" content="ICO-Dapp" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="">
-        <div className="">
-          <h1 className="text-lg">Welcome to Crypto Devs ICO!</h1>
-          <div className={styles.description}>
+      <div className="text-white">
+        <div>
+          <h1 className="text-6xl font-semibold text-center">
+            Welcome to Crypto Devs ICO!
+          </h1>
+          <div className="text-xl py-7 text-center">
             You can claim or mint Crypto Dev tokens here
           </div>
           {walletConnected ? (
             <div>
-              <div className={styles.description}>
+              <div className="text-xl py-2 text-center">
                 You have minted {ethers.utils.formatEther(balanceOfTokens)}{" "}
                 Crypto Dev Tokens
               </div>
-              <div className={styles.description}>
+              <div className="text-xl py-2 text-center">
                 Overall {ethers.utils.formatEther(totalSupply)}/10000 have been
                 minted!!!
               </div>
               {renderButton()}
             </div>
           ) : (
-            <button onClick={connectWallet} className={styles.button}>
-              Connect your wallet
-            </button>
+            <div className="flex justify-center py-3">
+              <button
+                onClick={connectWallet}
+                className="py-2 px-7 text-white font-semibold bg-indigo-700 rounded-3xl"
+              >
+                Connect your wallet
+              </button>
+            </div>
           )}
         </div>
       </div>
 
-      <footer className={styles.footer}>
-        Made with &#10084; by Crypto Devs
+      <footer className="absolute inset-x-0 bottom-0 py-4 bg-slate-700 text-white flex justify-center">
+        Made by Crypto Devs with{" "}
+        <span className="text-red-500"> &#10084; </span>
       </footer>
     </div>
   );
