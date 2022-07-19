@@ -34,7 +34,7 @@ contract CDToken is ERC20, Ownable {
 
         uint256 amount = 0;
         for (uint256 index = 0; index < balance; index++) {
-            uint256 tokenId = MyNFT.tokenOwnerByIndex(msg.sender, index);
+            uint256 tokenId = MyNFT.tokenOfOwnerByIndex(msg.sender, index);
 
             if (!tokensClaimed[tokenId]) {
                 amount += 1;
