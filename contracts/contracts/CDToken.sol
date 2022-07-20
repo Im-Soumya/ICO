@@ -9,7 +9,7 @@ import "./IMyNFT.sol";
 contract CDToken is ERC20, Ownable {
     IMyNFT MyNFT;
 
-    uint256 public constant maxTokens = 10000 * 10**18;
+    uint256 public constant maxTotalSupply = 10000 * 10**18;
     uint256 public constant pricePerToken = 0.001 ether;
     uint256 public constant tokensPerNFT = 10 * 10**18;
 
@@ -20,9 +20,11 @@ contract CDToken is ERC20, Ownable {
     }
 
     function publicMint(uint256 amount) public payable {
-        require(msg.value >= amount * pricePerToken, "Didnot send enough eth");
+        uint256 _requiredAmt = amount * pricePerToken;
+        require(msg.value >= _requiredAmt, "Didnot send enough eth");
+        uint256 amtInDecimals = amount * 10**18;
         require(
-            (totalSupply() + (amount * 10**18)) <= maxTokens,
+            (totalSupply() + amtInDecimals) <= maxTotalSupply,
             "Max limit reached"
         );
         _mint(msg.sender, amount * 10**18);
